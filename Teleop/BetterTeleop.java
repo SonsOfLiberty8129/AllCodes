@@ -14,8 +14,8 @@ public class BetterTeleop extends OpMode {
     private DcMotor leftMotor = null;
     private DcMotor rightMotor = null;
     private DcMotor armMotor = null;
-    private DcMotor grabMotor = null;
-    private Servo gripServo = null;
+    private DcMotor gripMotor = null;
+
 
     public BetterTeleop() {}
 
@@ -24,29 +24,27 @@ public class BetterTeleop extends OpMode {
         leftMotor = hardwareMap.dcMotor.get("leftDrive");
         rightMotor = hardwareMap.dcMotor.get("rightDrive");
         armMotor = hardwareMap.dcMotor.get("armMotor");
-        grabMotor = hardwareMap.dcMotor.get("grabMotor");
-        gripServo = hardwareMap.servo.get("gripServo");
+        gripMotor = hardwareMap.dcMotor.get("gripMotor");
 
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        gripServo.setPosition(0.55941);
+        gripMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
     }
 
     public void loop()
     {
+        leftMotor.setPower(gamepad1.left_stick_y);
+        rightMotor.setPower(gamepad1.right_stick_y);
+
+        armMotor.setPower(gamepad2.right_stick_y);
+        gripMotor.setPower(gamepad2.right_trigger);
+        gripMotor.setPower(-gamepad2.left_trigger);
 
 
-        leftMotor.setPower(-gamepad1.left_stick_y);
-        rightMotor.setPower(-gamepad1.right_stick_y);
 
-        armMotor.setPower(-gamepad2.right_stick_y);
-        grabMotor.setPower(gamepad2.left_stick_y);
-
-        if (gamepad2.y) {
-            gripServo.setPosition(1);
-        } else
-        {
-            gripServo.setPosition(0);
-        }
     }
+
 }
+
 
