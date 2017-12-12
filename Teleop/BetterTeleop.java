@@ -14,7 +14,10 @@ public class BetterTeleop extends OpMode {
     private DcMotor leftMotor = null;
     private DcMotor rightMotor = null;
     private DcMotor armMotor = null;
-    private DcMotor gripMotor = null;
+    private DcMotor cubeGrip = null;
+    private DcMotor Idol_Arm = null;
+    private Servo clawServo = null;
+
 
 
     public BetterTeleop() {}
@@ -24,11 +27,12 @@ public class BetterTeleop extends OpMode {
         leftMotor = hardwareMap.dcMotor.get("leftDrive");
         rightMotor = hardwareMap.dcMotor.get("rightDrive");
         armMotor = hardwareMap.dcMotor.get("armMotor");
-        gripMotor = hardwareMap.dcMotor.get("gripMotor");
+        cubeGrip = hardwareMap.dcMotor.get("cubeGrip");
+        Idol_Arm = hardwareMap.dcMotor.get("IdolArmMotor");
+        clawServo = hardwareMap.servo.get("gripServo");
 
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        gripMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        cubeGrip.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 
@@ -37,12 +41,48 @@ public class BetterTeleop extends OpMode {
         leftMotor.setPower(gamepad1.left_stick_y);
         rightMotor.setPower(gamepad1.right_stick_y);
 
-        armMotor.setPower(gamepad2.right_stick_y);
-        gripMotor.setPower(gamepad2.right_trigger);
-        gripMotor.setPower(-gamepad2.left_trigger);
+        armMotor.setPower(gamepad2.left_stick_y);
+
+        if(gamepad2.dpad_right)
+        {
+            cubeMotor(1, 0.5);
+
+            Stop();
+        }
+        if(gamepad2.dpad_left)
+        {
+            cubeMotor(-1  , 0.5);
+
+            Stop();
+        }
+
+        Idol_Arm.setPower(-gamepad2.right_stick_y);
+
+        if(gamepad2.a)
+        {
+            clawServo.setPosition(0);
+        }
+        if(gamepad2.b)
+        {
+            clawServo.setPosition(0.25);
+        }
 
 
+    }
+    public void cubeMotor (int distance, double power)
+    {
+        cubeGrip.setMode(DcMotor.RunMode.RESET_ENCODERS);
 
+        cubeGrip.setTargetPosition(distance);
+
+        cubeGrip.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        cubeGrip.setPower(power);
+    }
+
+    public void Stop()
+    {
+        cubeGrip.setPower(0);
     }
 
 }
